@@ -1,0 +1,56 @@
+---
+title: "Sistema"
+description: "Health, readiness e status público da Nori API."
+---
+
+## `GET /health`
+
+Verifica se o processo da API está vivo. Não consulta dependências externas.
+
+```bash
+curl https://api.nori.qzz.io/health
+```
+
+```json
+{
+  "ok": true,
+  "status": "ok",
+  "service": "nori-api"
+}
+```
+
+Retorna `Cache-Control: no-store`.
+
+## `GET /ready`
+
+Verifica se a API consegue atender requisições que dependem de MongoDB e do limitador configurado.
+
+```bash
+curl -i https://api.nori.qzz.io/ready
+```
+
+```json
+{
+  "ready": true,
+  "dependencies": {
+    "mongodb": "ok",
+    "rateLimiter": "ok"
+  }
+}
+```
+
+Retorna `200` quando pronta e `503` quando uma dependência necessária está indisponível.
+
+## `GET /status`
+
+Retorna o estado público dos serviços da Nori. A estrutura detalhada pode crescer sem aviso; consumidores devem ignorar campos desconhecidos.
+
+```bash
+curl https://api.nori.qzz.io/status
+```
+
+Use esta rota para exibição operacional. Para liveness e readiness de um monitor, prefira `/health` e `/ready`.
+
+## `GET /favicon.ico`
+
+Entrega o favicon da API. Clientes de integração normalmente não precisam chamar esta rota.

@@ -1,0 +1,38 @@
+---
+title: "Erros e limites"
+description: "Como interpretar respostas de erro e respeitar os limites da API."
+---
+
+## Códigos HTTP
+
+| Código | Significado |
+| --- | --- |
+| `200` | Requisição concluída. |
+| `302` / `303` | Redirecionamento de OAuth ou pagamento. Siga o redirecionamento quando seu cliente suportar o fluxo. |
+| `400` | Parâmetro ou payload inválido. |
+| `401` | Credencial ausente ou inválida em uma rota que exige autenticação. |
+| `403` | A origem, assinatura ou escopo não tem permissão. |
+| `404` | Recurso ou token não encontrado. |
+| `410` | Recurso público expirado ou removido. |
+| `422` | Recurso rejeitado após validação semântica. |
+| `429` | Limite de requisições excedido. Respeite `Retry-After` quando presente. |
+| `500` | Erro inesperado no servidor. |
+| `503` | Dependência indisponível ou serviço não pronto. |
+
+## Formato de erro
+
+```json
+{
+  "error": "mensagem legível"
+}
+```
+
+Não dependa do texto da mensagem para lógica de negócio. Use o status HTTP e, quando fornecido, o campo de erro documentado pela rota.
+
+## Limites
+
+As rotas públicas possuem limites específicos por IP. Webhooks também têm limites por rota. Quando receber `429`, aguarde o intervalo indicado por `Retry-After` e aplique backoff exponencial com jitter.
+
+<Warning>
+  Não faça polling agressivo de `/status`, `/public/catalog` ou `/public/capabilities`. Essas respostas podem ser armazenadas em cache por alguns minutos.
+</Warning>

@@ -1,0 +1,44 @@
+---
+title: "Recursos públicos"
+description: "Transcripts, arquivos por token e status de pagamentos."
+---
+
+## `GET /public-blob/{token}`
+
+Entrega um arquivo público associado a um token.
+
+```bash
+curl -L https://api.nori.qzz.io/public-blob/<token> -o arquivo
+```
+
+O tipo de conteúdo e o corpo dependem do arquivo. O token deve ser tratado como um bearer capability: quem possui o link pode tentar acessá-lo até sua expiração ou remoção.
+
+## `GET /t/{token}`
+
+Abre um transcript público.
+
+```bash
+curl -L https://api.nori.qzz.io/t/<token>
+```
+
+O retorno é uma página HTML sanitizada quando o transcript está disponível. O endpoint pode retornar `404` para token inexistente e `410` para transcript expirado ou removido.
+
+## `GET /t/{token}/{guildId}`
+
+É a variante que também valida o Snowflake do servidor Discord.
+
+```bash
+curl -L https://api.nori.qzz.io/t/<token>/<guildId>
+```
+
+Use esta forma quando o consumidor quiser impedir que um token seja usado com o servidor errado.
+
+## `GET /ticket-payments/{paymentId}`
+
+Consulta o estado público de uma cobrança de ticket.
+
+```bash
+curl https://api.nori.qzz.io/ticket-payments/<paymentId>
+```
+
+O payload contém o estado público e a mensagem correspondente. Dados privados de identidade e credenciais não fazem parte da resposta.

@@ -1,0 +1,59 @@
+---
+title: "OAuth e webhooks"
+description: "Rotas públicas de login, callbacks e recebimento de eventos."
+---
+
+## OAuth do Discord
+
+### `GET /auth/discord/login`
+
+Inicia o fluxo OAuth. Abra a rota em um navegador e preserve o `state` gerado pelo fluxo.
+
+### `GET /auth/discord/callback`
+
+Recebe o `code` e o `state` do Discord. A API valida o estado antes de criar a sessão.
+
+### `GET /auth/session`
+
+Consulta a sessão atual do navegador.
+
+```bash
+curl -b cookies.txt https://api.nori.qzz.io/auth/session
+```
+
+### `POST /auth/logout`
+
+Encerra a sessão atual.
+
+```bash
+curl -X POST -b cookies.txt -c cookies.txt https://api.nori.qzz.io/auth/logout
+```
+
+## Mercado Pago
+
+### `GET /mercadopago/callback`
+
+Recebe o retorno do fluxo de conexão do Mercado Pago. O cliente deve seguir o redirecionamento e não tratar parâmetros OAuth como dados persistentes.
+
+### `POST /mercadopago/webhook`
+### `POST /api/webhooks/mercadopago`
+
+Os dois caminhos recebem o mesmo webhook do Mercado Pago. A API valida a configuração do provedor e processa o evento de forma idempotente.
+
+## EFI Pix
+
+### `POST /payments/efi/webhook`
+### `POST /webhooks/efi/pix`
+### `POST /api/webhooks/efi`
+
+Os três caminhos são aliases do webhook EFI Pix. Envie o corpo original e os headers necessários para a validação do provedor.
+
+## Top.gg
+
+### `POST /api/webhooks/topgg`
+
+Recebe eventos do Top.gg. O segredo configurado no provedor é validado antes do processamento.
+
+<Warning>
+  Nunca publique segredos de webhook, códigos OAuth, cookies ou tokens de transcript nos exemplos, issues ou logs.
+</Warning>

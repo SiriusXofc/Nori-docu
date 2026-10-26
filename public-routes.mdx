@@ -1,0 +1,56 @@
+---
+title: "Rotas públicas"
+description: "Inventário completo das rotas públicas anunciadas pela Nori API."
+---
+
+Todas as rotas usam a URL base `https://api.nori.qzz.io`. “Pública” significa que a rota não exige uma sessão ou uma API key da Nori; isso não elimina validações próprias, tokens ou assinaturas.
+
+## Operação e catálogo
+
+| Método | Rota | Uso |
+| --- | --- | --- |
+| `GET` | `/health` | Liveness mínimo da API. |
+| `GET` | `/ready` | Verifica dependências necessárias para atender requisições. Pode retornar `503`. |
+| `GET` | `/status` | Status público dos serviços. |
+| `GET` | `/public/catalog` | Planos, módulos e links públicos. |
+| `GET` | `/public/capabilities` | Convenções, versão pública e rotas anunciadas. |
+| `GET` | `/payments/plans` | Planos e preços públicos do checkout. |
+| `GET` | `/favicon.ico` | Ícone da API. Não é uma rota de dados. |
+
+## Recursos por token
+
+| Método | Rota | Uso |
+| --- | --- | --- |
+| `GET` | `/public-blob/{token}` | Entrega um arquivo público protegido por token. |
+| `GET` | `/t/{token}` | Abre um transcript público protegido por token. |
+| `GET` | `/t/{token}/{guildId}` | Abre um transcript e valida o servidor informado. |
+| `GET` | `/ticket-payments/{paymentId}` | Consulta o estado público de uma cobrança de ticket. |
+
+Tokens inválidos, expirados, removidos ou pertencentes a outro servidor podem retornar `400`, `404`, `410` ou `422`, conforme a validação aplicada.
+
+## OAuth e callbacks
+
+| Método | Rota | Uso |
+| --- | --- | --- |
+| `GET` | `/auth/discord/login` | Inicia o login com Discord. |
+| `GET` | `/auth/discord/callback` | Recebe o retorno do Discord e valida o `state`. |
+| `GET` | `/auth/session` | Consulta a sessão atual do navegador. |
+| `POST` | `/auth/logout` | Encerra a sessão do navegador. |
+| `GET` | `/mercadopago/callback` | Recebe o retorno do fluxo OAuth do Mercado Pago. |
+
+## Webhooks públicos
+
+| Método | Rota | Provedor |
+| --- | --- | --- |
+| `POST` | `/payments/efi/webhook` | EFI Pix |
+| `POST` | `/webhooks/efi/pix` | EFI Pix, alias |
+| `POST` | `/api/webhooks/efi` | EFI Pix, alias |
+| `POST` | `/mercadopago/webhook` | Mercado Pago |
+| `POST` | `/api/webhooks/mercadopago` | Mercado Pago, alias |
+| `POST` | `/api/webhooks/topgg` | Top.gg |
+
+Os webhooks são públicos apenas no sentido de não exigirem uma API key da Nori. O handler valida o segredo ou a assinatura do provedor. Envie o payload original e não remova headers usados na verificação.
+
+<Note>
+  O endpoint `/ws` aceita conexões HTTP públicas, mas a conexão útil depende de autenticação e autorização no próprio handler. Ele não é uma integração pública documentada.
+</Note>

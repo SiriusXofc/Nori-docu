@@ -1,47 +1,54 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Faça sua primeira chamada pública à Nori API."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+## 1. Verifique a API
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+As rotas públicas de operação não exigem chave:
 
-## Prerequisites
+```bash
+curl https://api.nori.qzz.io/health
+```
 
-Before you begin, you must have:
+Resposta esperada:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+```json
+{
+  "ok": true,
+  "status": "ok",
+  "service": "nori-api"
+}
+```
 
-## Get started
+## 2. Leia as capabilities
 
-<Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+```bash
+curl https://api.nori.qzz.io/public/capabilities
+```
 
-    ```bash
-    npm install your-package
-    ```
-  </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+Essa resposta informa a versão pública anunciada, a URL base, o formato de autenticação das rotas protegidas e a lista de recursos públicos.
 
-    ```bash
-    your-cli init
-    ```
-  </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+## 3. Consulte o catálogo
 
-    ```bash
-    your-cli start
-    ```
-  </Step>
-</Steps>
+```bash
+curl https://api.nori.qzz.io/public/catalog
+```
+
+O catálogo retorna planos, módulos e links públicos da Nori.
+
+## 4. Trate erros
+
+Considere qualquer status fora de `2xx` como falha. Respostas de erro usam o formato:
+
+```json
+{
+  "error": "mensagem legível"
+}
+```
+
+Leia também [Erros e limites](/errors-rate-limits) antes de colocar a integração em produção.
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Não coloque segredos em query strings. Para integrações autenticadas, use a documentação privada fornecida pela equipe da Nori.
 </Tip>
