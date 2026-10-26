@@ -1,36 +1,34 @@
 ---
-title: "Nori API"
-description: "Integre os recursos públicos da Nori com uma API simples e previsível."
+title: "Nori"
+description: "Visão geral da Nori e ponto de entrada para a referência da API pública."
 ---
 
-A Nori é uma plataforma de atendimento e automação para comunidades Discord. Esta documentação descreve somente as rotas públicas da API em `https://api.nori.qzz.io`.
+A Nori é uma plataforma de atendimento para comunidades Discord. Ela organiza o contato entre membros e equipes por meio de tickets e dos fluxos de atendimento configurados no servidor.
 
-<Note>
-  Rotas de dashboard, tickets, painéis, configurações, auditoria, métricas e storage não fazem parte desta documentação pública. Elas exigem sessão ou credenciais específicas.
-</Note>
+## Para quem é a Nori
 
-## Comece em poucos minutos
+A Nori foi criada para comunidades que precisam centralizar solicitações de suporte dentro do Discord, acompanhar o atendimento e oferecer uma experiência consistente para membros e equipe.
 
-<Card title="Quickstart" icon="rocket" href="/quickstart">
-  Faça sua primeira requisição e trate os retornos básicos.
-</Card>
+Os recursos visíveis no produto incluem tickets, painéis de atendimento, formulários, transcripts e configurações de comunidade. A disponibilidade de cada recurso depende da configuração e do plano do servidor.
 
-<Card title="Rotas públicas" icon="list" href="/public-routes">
-  Consulte a lista completa de endpoints disponíveis sem autenticação de API.
-</Card>
+## Como começar
 
-<Card title="Referência da API" icon="code" href="/api-reference/system">
-  Veja métodos, parâmetros, respostas e exemplos por grupo de recurso.
-</Card>
+Se você está conhecendo a Nori, comece pelo funcionamento do produto no seu servidor Discord. Quando precisar integrar dados públicos de operação ou verificar a disponibilidade da API, consulte a [referência da API pública](/api-reference).
 
-## URL base
+## API pública
+
+A referência técnica cobre somente operações públicas confirmadas no contrato atual da Nori API. Ela é destinada a usuários e integradores que precisam consultar informações públicas da API, sem expor contratos internos do dashboard ou da operação da Nori.
+
+URL base confirmada:
 
 ```text
 https://api.nori.qzz.io
 ```
 
-As respostas são JSON, salvo quando indicado o contrário. Use `Accept: application/json` nas integrações que esperam JSON.
+Não coloque credenciais em páginas públicas, no frontend ou no controle de versão. Use placeholders nos exemplos e mantenha qualquer segredo fora dos logs.
 
-## Suporte
+## Escopo desta primeira versão
 
-Para dúvidas sobre integração, entre no [servidor oficial da Nori](https://discord.gg/5GFRecexb7).
+Esta primeira etapa contém apenas esta visão geral e a referência pública. Guias de instalação, tutoriais, documentação de equipe e outros fluxos serão adicionados separadamente quando houver contrato e escopo aprovados.
+
+Para suporte, entre no [servidor oficial da Nori](https://discord.gg/5GFRecexb7).

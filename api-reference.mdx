@@ -1,0 +1,130 @@
+---
+title: "Referência da API pública"
+description: "Operações públicas confirmadas da Nori API para usuários e integradores externos."
+---
+
+Esta página documenta somente o contrato público confirmado da Nori API. Ela não substitui APIs privadas do produto e não descreve operações que dependem de sessão, administração ou infraestrutura interna.
+
+## URL base e formato
+
+```text
+https://api.nori.qzz.io
+```
+
+As rotas desta referência retornam JSON, salvo quando indicado de outra forma. Use o header `Accept: application/json` quando o cliente esperar JSON.
+
+## Autenticação
+
+As operações abaixo são públicas e não exigem `X-Api-Key`.
+
+Isso não significa que qualquer dado esteja disponível sem validação: o endpoint de capabilities publica informações do contrato; os demais endpoints desta página não recebem credenciais de integração.
+
+## Operações
+
+### `GET /health`
+
+Verifica se o processo da API está vivo. Não consulta dependências externas.
+
+```bash
+curl --fail-with-body https://api.nori.qzz.io/health \
+  -H "Accept: application/json"
+```
+
+Resposta `200`:
+
+```json
+{
+  "ok": true,
+  "status": "ok",
+  "service": "nori-api"
+}
+```
+
+A resposta usa `Cache-Control: no-store`.
+
+### `GET /status`
+
+Retorna o status público e compacto dos serviços da Nori.
+
+```bash
+curl --fail-with-body https://api.nori.qzz.io/status \
+  -H "Accept: application/json"
+```
+
+A resposta `200` contém um objeto `services` com o estado público dos serviços, incluindo a API, o banco, transcripts e dependências públicas de status. Os consumidores devem ignorar campos desconhecidos para manter compatibilidade futura.
+
+### `GET /public/catalog`
+
+Retorna o catálogo público de planos e módulos publicado pela Nori.
+
+```bash
+curl --fail-with-body https://api.nori.qzz.io/public/catalog \
+  -H "Accept: application/json"
+```
+
+Resposta `200`:
+
+```json
+{
+  "service": "Nori API",
+  "plans": [],
+  "modules": [],
+  "links": {
+    "documentation": "https://docs.nori.qzz.io",
+    "support": "https://discord.gg/5GFRecexb7"
+  }
+}
+```
+
+`plans` e `modules` são arrays definidos pelo catálogo atual. Não fixe preços, nomes ou disponibilidade no cliente; leia a resposta atual.
+
+### `GET /public/capabilities`
+
+Retorna a versão pública anunciada, a URL base, as convenções do contrato e a lista pública anunciada pela API.
+
+```bash
+curl --fail-with-body https://api.nori.qzz.io/public/capabilities \
+  -H "Accept: application/json"
+```
+
+Campos estáveis confirmados:
+
+```json
+{
+  "service": "Nori API",
+  "apiVersion": "2026.08",
+  "baseUrl": "https://api.nori.qzz.io",
+  "documentation": "https://docs.nori.qzz.io",
+  "authentication": {
+    "type": "apiKey",
+    "header": "X-Api-Key",
+    "serverHeader": "X-Guild-Id"
+  },
+  "publicRoutes": []
+}
+```
+
+O campo `publicRoutes` é gerado pela própria API e pode mudar quando o contrato público for revisado. Não use esta documentação para inferir acesso a operações que não estejam descritas nesta página.
+
+## Erros observáveis
+
+As respostas de erro das operações JSON usam o envelope da API:
+
+```json
+{
+  "error": "mensagem legível"
+}
+```
+
+Comportamentos confirmados para estas operações:
+
+- `200` para uma resposta bem-sucedida;
+- `500` quando ocorre um erro interno ao montar uma resposta;
+- `503` não é um sinal de saúde para `/health`, mas pode ser retornado por dependências durante a operação de status;
+- limites de requisição podem retornar `429`.
+
+Quando receber `429`, aguarde o header `Retry-After` quando ele estiver presente e aplique backoff. Não repita indefinidamente uma requisição que está falhando.
+
+## O que ficou fora
+
+Operações sem comprovação suficiente de que são parte do contrato público de integração não foram incluídas. Recursos que exigem contexto privado, sessão, administração ou detalhes internos também não fazem parte desta referência.
